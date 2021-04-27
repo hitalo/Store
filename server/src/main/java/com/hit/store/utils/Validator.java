@@ -1,6 +1,7 @@
 package com.hit.store.utils;
 
 import com.hit.store.models.People;
+import com.hit.store.models.Permission;
 
 public class Validator {
 
@@ -19,6 +20,15 @@ public class Validator {
 		final String email = people.getEmail();
 		if(!Validator.isEmailValid(email)) throw new IllegalArgumentException("Invalid email");
 		if(people.getName().trim().equals("")) throw new IllegalArgumentException("Invalid name");
+		return true;
+	}
+	
+	
+	public static boolean validatePermission(Permission permission) {
+		final String value = permission.getValue();
+		final String name = permission.getName();
+		if(value == null || value.trim().equals("")) throw new IllegalArgumentException("Invalid value");
+		if(name == null || name.trim().equals("")) throw new IllegalArgumentException("Invalid name");
 		return true;
 	}
 }
