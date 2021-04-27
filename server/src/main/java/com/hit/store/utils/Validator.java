@@ -1,5 +1,7 @@
 package com.hit.store.utils;
 
+import com.hit.store.models.People;
+
 public class Validator {
 
 	public static boolean isEmailValid(String email) {
@@ -10,5 +12,13 @@ public class Validator {
 	
 	public static boolean isPasswordValid(String password) {
 		return password.length() > 5 ? true : false;			//  for now, thats the only condition 
+	}
+	
+	
+	public static boolean validatePeople(People people) {
+		final String email = people.getEmail();
+		if(!Validator.isEmailValid(email)) throw new IllegalArgumentException("Invalid email");
+		if(people.getName().trim().equals("")) throw new IllegalArgumentException("Invalid name");
+		return true;
 	}
 }

@@ -55,7 +55,7 @@ public class PeopleController {
 	@PostMapping("/addOne")
 	public Long addOnePeople(@RequestBody People people) {
 		final String email = people.getEmail();
-		if(!Validator.isEmailValid(email)) throw new IllegalArgumentException("Invalid email");
+		Validator.validatePeople(people);
 		if(peopleRepository.findByEmail(email).isPresent()) throw new IllegalArgumentException("Email already exists");
 		return peopleRepository.save(people).getId();
 	}
