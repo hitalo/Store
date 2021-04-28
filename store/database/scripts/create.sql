@@ -40,7 +40,7 @@ CREATE TABLE people.permission (
 
 CREATE TABLE people.role (
 	id SERIAL PRIMARY KEY NOT NULL,
-	name VARCHAR NOT NULL,
+	name VARCHAR NOT NULL UNIQUE,
 	description TEXT
 );
 
