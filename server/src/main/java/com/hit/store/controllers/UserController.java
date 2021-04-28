@@ -101,6 +101,7 @@ public class UserController {
 	
 	
 	@DeleteMapping("/delete")
+	@SuppressWarnings("all")
 	public Object deleteUser(@RequestBody User user) {
 		final Long id = user.getId();
 		if(id == null) return null;
