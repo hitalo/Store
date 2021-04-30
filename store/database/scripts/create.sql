@@ -56,7 +56,7 @@ CREATE TABLE people.user_role (
 
 CREATE TABLE people.role_permission (	
 	role_id INTEGER REFERENCES people.role(id) ON DELETE CASCADE,
-	permission_id INTEGER REFERENCES people.permission(id) ON DELETE CASCADE
+	permission_id VARCHAR REFERENCES people.permission(value) ON DELETE CASCADE
 );
 
 
