@@ -63,7 +63,7 @@ public class UserController {
 	public Long addUserNewPeople(@RequestBody User user) {
 		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
 			throw new IllegalArgumentException("login or email invalid");
-//		peopleRepository.save(user.getPeople());
+		peopleRepository.save(user.getPeople());
 		return userRepository.save(user).getId();
 	}
 	
