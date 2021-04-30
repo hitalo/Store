@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hit.store.models.Role;
+import com.hit.store.models.dto.RolePermission;
 import com.hit.store.repositories.RoleRepository;
 
 @RestController
@@ -69,5 +70,17 @@ public class RoleController {
 		if(!result.isPresent()) return null;
 		roleRepository.deleteById(id);
 		return new HashMap(){{put("deleted",1);}};
+	}
+	
+	
+	@PutMapping("/updateRolePermissions")
+	public void updateRolePermissions(@RequestBody RolePermission rolePermission) {
+		final Long id = rolePermission.getRoleId();
+		if(id == null) throw new IllegalArgumentException("id can't be null");
+		final Optional<Role> resultRole = roleRepository.findById(id);
+		if(!resultRole.isPresent()) throw new IllegalArgumentException("Not found role with id: " + id);
+		final Role role = resultRole.get();
+		role.setPermissions(rolePermission.getPermissions());
+		roleRepository.save(role);
 	}
 }

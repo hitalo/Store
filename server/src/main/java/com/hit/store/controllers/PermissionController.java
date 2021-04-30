@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hit.store.models.Permission;
+import com.hit.store.models.User;
 import com.hit.store.repositories.PermissionRepository;
 import com.hit.store.utils.Validator;
 
@@ -47,6 +48,16 @@ public class PermissionController {
 		if(name == null || name.trim().equals("")) return null;
 		final List<Permission> result = permissionRepository.findByNameIgnoreCaseContaining(name);
 		return result;
+	}
+	
+	
+	@GetMapping("/getUsersByPermission")
+	public List<User> getUsersByPermission(@RequestBody Permission permission) {
+		final String value = permission.getValue();
+		if(value == null || value.trim().equals("")) return null;
+		final Optional<Permission> resultPermission = permissionRepository.findById(value);
+		if(!resultPermission.isPresent()) return null;
+		return resultPermission.get().getUsers();
 	}
 	
 	

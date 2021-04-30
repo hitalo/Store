@@ -1,9 +1,15 @@
 package com.hit.store.models;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +28,8 @@ public class Permission {
 	private String name;
 	private String description;
 	
+	
+	@ManyToMany(mappedBy="permissions", fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({"permissions", "roles"})
+	private List<User> users;
 }

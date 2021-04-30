@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hit.store.models.People;
 import com.hit.store.models.User;
+import com.hit.store.models.dto.UserPermission;
+import com.hit.store.models.dto.UserRole;
 import com.hit.store.repositories.PeopleRepository;
 import com.hit.store.repositories.UserRepository;
 import com.hit.store.utils.Validator;
@@ -61,6 +63,7 @@ public class UserController {
 	public Long addUserNewPeople(@RequestBody User user) {
 		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
 			throw new IllegalArgumentException("login or email invalid");
+//		peopleRepository.save(user.getPeople());
 		return userRepository.save(user).getId();
 	}
 	
@@ -109,5 +112,29 @@ public class UserController {
 		if(!result.isPresent()) return null;
 		userRepository.deleteById(id);
 		return new HashMap(){{put("message", "deleted");}};
+	}
+	
+	
+	@PutMapping("/updateUserPermissions")
+	public void updateUserPermissions(@RequestBody UserPermission userPermissions) {
+		final Long id = userPermissions.getUserId();
+		if(id == null) throw new IllegalArgumentException("id can't be null");
+		final Optional<User> resultUser = userRepository.findById(id);
+		if(!resultUser.isPresent()) throw new IllegalArgumentException("Not found user with id: " + id);
+		final User user = resultUser.get();
+		user.setPermissions(userPermissions.getPermissions());
+		userRepository.save(user);
+	}
+	
+	
+	@PutMapping("/updateUserRoles")
+	public void updateUserRoles(@RequestBody UserRole userRole) {
+		final Long id = userRole.getUserId();
+		if(id == null) throw new IllegalArgumentException("id can't be null");
+		final Optional<User> resultUser = userRepository.findById(id);
+		if(!resultUser.isPresent()) throw new IllegalArgumentException("Not found user with id: " + id);
+		final User user = resultUser.get();
+		user.setRoles(userRole.getRoles());
+		userRepository.save(user);
 	}
 }
