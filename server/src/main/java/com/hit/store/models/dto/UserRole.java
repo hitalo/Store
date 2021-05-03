@@ -2,7 +2,7 @@ package com.hit.store.models.dto;
 
 import java.util.List;
 
-import com.hit.store.models.Role;
+import com.hit.store.models.people.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

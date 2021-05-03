@@ -1,4 +1,4 @@
-package com.hit.store.controllers;
+package com.hit.store.controllers.people;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.hit.store.controllers;
+package com.hit.store.controllers.people;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hit.store.models.Employee;
-import com.hit.store.models.People;
-import com.hit.store.repositories.EmployeeRepository;
-import com.hit.store.repositories.PeopleRepository;
+import com.hit.store.models.people.Employee;
+import com.hit.store.models.people.People;
+import com.hit.store.repositories.people.EmployeeRepository;
+import com.hit.store.repositories.people.PeopleRepository;
 import com.hit.store.utils.Validator;
 
 @RestController

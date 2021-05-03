@@ -1,4 +1,4 @@
-package com.hit.store.models;
+package com.hit.store.models.people;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

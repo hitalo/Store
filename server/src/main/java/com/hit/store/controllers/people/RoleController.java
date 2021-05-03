@@ -1,4 +1,4 @@
-package com.hit.store.controllers;
+package com.hit.store.controllers.people;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hit.store.models.Role;
 import com.hit.store.models.dto.RolePermission;
-import com.hit.store.repositories.RoleRepository;
+import com.hit.store.models.people.Role;
+import com.hit.store.repositories.people.RoleRepository;
 
 @RestController
 @RequestMapping("/role")

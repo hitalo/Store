@@ -1,7 +1,7 @@
 package com.hit.store.utils;
 
-import com.hit.store.models.People;
-import com.hit.store.models.Permission;
+import com.hit.store.models.people.People;
+import com.hit.store.models.people.Permission;
 
 public class Validator {
 
