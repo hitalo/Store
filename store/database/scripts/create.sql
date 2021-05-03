@@ -68,7 +68,7 @@ CREATE TABLE product.product (
 	description TEXT,
 	value NUMERIC(9,2) NOT NULL CHECK(value > 0),
 	unit VARCHAR(10) NOT NULL,
-	image VARCHAR NOT NULL DEFAULT 'product_placeholder.png',
+	image BYTEA NOT NULL,
 	stock NUMERIC NOT NULL DEFAULT 0
 );
 
