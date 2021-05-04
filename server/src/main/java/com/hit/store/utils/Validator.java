@@ -3,6 +3,7 @@ package com.hit.store.utils;
 import com.hit.store.models.people.People;
 import com.hit.store.models.people.Permission;
 import com.hit.store.models.product.Product;
+import com.hit.store.models.product.Tag;
 
 public class Validator {
 
@@ -40,6 +41,13 @@ public class Validator {
 		if(product.getValue() < 0) throw new IllegalArgumentException("Invalid value");
 		final String unit = product.getUnit();
 		if(unit == null || unit.trim().equals("")) throw new IllegalArgumentException("Invalid unit");
+		return true;
+	}
+	
+	
+	public static boolean validateTag(Tag tag) {
+		final String name = tag.getName();
+		if(name == null || name.trim().equals("")) throw new IllegalArgumentException("Invalid name");
 		return true;
 	}
 }
