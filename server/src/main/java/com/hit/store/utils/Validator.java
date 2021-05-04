@@ -2,6 +2,7 @@ package com.hit.store.utils;
 
 import com.hit.store.models.people.People;
 import com.hit.store.models.people.Permission;
+import com.hit.store.models.product.Product;
 
 public class Validator {
 
@@ -29,6 +30,16 @@ public class Validator {
 		final String name = permission.getName();
 		if(value == null || value.trim().equals("")) throw new IllegalArgumentException("Invalid value");
 		if(name == null || name.trim().equals("")) throw new IllegalArgumentException("Invalid name");
+		return true;
+	}
+	
+	
+	public static boolean validateProduct(Product product) {
+		final String name = product.getName();
+		if(name == null || name.trim().equals("")) throw new IllegalArgumentException("Invalid name");
+		if(product.getValue() < 0) throw new IllegalArgumentException("Invalid value");
+		final String unit = product.getUnit();
+		if(unit == null || unit.trim().equals("")) throw new IllegalArgumentException("Invalid unit");
 		return true;
 	}
 }
