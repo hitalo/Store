@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hit.store.models.dto.ProductDTO;
 import com.hit.store.models.product.Product;
+import com.hit.store.models.product.Tag;
 import com.hit.store.repositories.product.ProductRepository;
 import com.hit.store.utils.Validator;
 
@@ -40,6 +41,16 @@ public class ProductController {
 		if(id == null) throw new IllegalArgumentException("id can't be null");
 		final Optional<Product> result = productRepository.findById(id);
 		if(!result.isPresent()) throw new IllegalArgumentException("Can't find product with id: " + id);
+		return result.get();
+	}
+	
+	
+	@GetMapping("/getByTag")
+	public List<Product> getByTag(@RequestBody Tag tag) {
+		final Long tagId = tag.getId();
+		if(tagId == null) throw new IllegalArgumentException("id can't be null");
+		final Optional<List<Product>> result = productRepository.findByTagsId(tagId);
+		if(!result.isPresent()) throw new IllegalArgumentException("Can't find product with id: " + tagId);
 		return result.get();
 	}
 	
@@ -71,8 +82,20 @@ public class ProductController {
 		if(id == null) throw new IllegalArgumentException("id can't be null");
 		final Optional<Product> result = productRepository.findById(id);
 		if(!result.isPresent()) throw new IllegalArgumentException("Can't find product with id: " + id);
-		final Product product = result .get();
+		final Product product = result.get();
 		product.setStock(stock);
+		return productRepository.save(product).getId();
+	}
+	
+	
+	@PutMapping("/updateTags")
+	public Long updateProductTags(@RequestBody ProductDTO productDTO) {
+		final Long id = productDTO.getId();
+		if(id == null) throw new IllegalArgumentException("id can't be null");
+		final Optional<Product> result = productRepository.findById(id);
+		if(!result.isPresent()) throw new IllegalArgumentException("Can't find product with id: " + id);
+		final Product product = result.get();
+		product.setTags(productDTO.getTags());
 		return productRepository.save(product).getId();
 	}
 	

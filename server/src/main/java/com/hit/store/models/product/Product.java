@@ -8,6 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,6 +40,16 @@ public class Product {
 	private String unit;
 	private byte[] image;
 	private Double stock;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name="product_tag",
+			schema="product",
+			joinColumns={@JoinColumn(name="product_id")},
+			inverseJoinColumns= {@JoinColumn(name="tag_id")}
+	)
+	@JsonIgnoreProperties("products")
+	private List<Tag> tags;
 	
 	
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
