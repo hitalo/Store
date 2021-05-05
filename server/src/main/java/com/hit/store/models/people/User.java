@@ -11,11 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hit.store.models.product.Cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name="user", schema="people")
+@JsonIgnoreProperties("cart")
 public class User {
 
 	@Id
@@ -64,4 +67,8 @@ public class User {
 	)
 	@JsonIgnoreProperties("users")
 	private List<Role> roles;
+	
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private List<Cart> cart;
 }

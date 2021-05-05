@@ -24,7 +24,7 @@ public class ProductDTO {
 	private Double stock;
 	
 	public Product getProduct() throws IOException {
-		return new Product(id, name, description, value, unit, productImage.getBytes(), stock);
+		return new Product(id, name, description, value, unit, productImage.getBytes(), stock, null);
 	}
 	
 }

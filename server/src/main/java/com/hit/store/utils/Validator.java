@@ -2,6 +2,7 @@ package com.hit.store.utils;
 
 import com.hit.store.models.people.People;
 import com.hit.store.models.people.Permission;
+import com.hit.store.models.product.Cart;
 import com.hit.store.models.product.Product;
 import com.hit.store.models.product.Tag;
 
@@ -48,6 +49,15 @@ public class Validator {
 	public static boolean validateTag(Tag tag) {
 		final String name = tag.getName();
 		if(name == null || name.trim().equals("")) throw new IllegalArgumentException("Invalid name");
+		return true;
+	}
+	
+	
+	public static boolean validateCart(Cart cart) {
+		if(cart.getUser().getId() == null) throw new IllegalArgumentException("user.id can't be null");
+		if(cart.getProduct().getId() == null) throw new IllegalArgumentException("product.id can't be null");
+		final Double amount = cart.getAmount();
+		if(amount == null || amount < 0) throw new IllegalArgumentException("Invalid amount");
 		return true;
 	}
 }
