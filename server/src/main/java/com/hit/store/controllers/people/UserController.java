@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,8 +62,11 @@ public class UserController {
 	
 	@PostMapping("/addWithNewPeople")
 	public Long addUserNewPeople(@RequestBody User user) {
-		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
-			throw new IllegalArgumentException("login or email invalid");
+		final String pass = user.getPassword();
+		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(pass))
+			throw new IllegalArgumentException("login or password invalid");
+		String hashedPassword = BCrypt.hashpw(pass, BCrypt.gensalt(10));
+		user.setPassword(hashedPassword);
 		peopleRepository.save(user.getPeople());
 		return userRepository.save(user).getId();
 	}
@@ -71,8 +75,9 @@ public class UserController {
 	@PostMapping("/addWithExistingPeople")
 	public Long addUserExistingPeople(@RequestBody User user) {
 		final Long peopleId = user.getPeople().getId();
-		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
-			throw new IllegalArgumentException("login or email invalid");
+		final String pass = user.getPassword();
+		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(pass))
+			throw new IllegalArgumentException("login or password invalid");
 		
 		final Optional<People> result = peopleRepository.findById(peopleId);
 		if(peopleId == null || !result.isPresent()) 
@@ -80,6 +85,9 @@ public class UserController {
 		
 		final People people = result.get();
 		if(userRepository.findByPeople(people).isPresent()) throw new IllegalArgumentException("User already exists");
+		
+		String hashedPassword = BCrypt.hashpw(pass, BCrypt.gensalt(10));
+		user.setPassword(hashedPassword);
 		
 		user.setPeople(people);
 		return userRepository.save(user).getId();
@@ -90,14 +98,18 @@ public class UserController {
 	public Long updateUser(@RequestBody User user) {
 		final Long peopleId = user.getPeople().getId();
 		final Long id = user.getId();
+		final String pass = user.getPassword();
 		
 		if(id == null) throw new IllegalArgumentException("Can't find person with id: " + id);
-		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
-			throw new IllegalArgumentException("login or email invalid");
+		if(user.getLogin() == null || user.getLogin().trim().equals("") || !Validator.isPasswordValid(pass))
+			throw new IllegalArgumentException("login or password invalid");
 		
 		final Optional<People> result = peopleRepository.findById(peopleId);
 		if(peopleId == null || !result.isPresent()) 
 			throw new IllegalArgumentException("Personal data missing");
+		
+		String hashedPassword = BCrypt.hashpw(pass, BCrypt.gensalt(10));
+		user.setPassword(hashedPassword);
 		
 		return userRepository.save(user).getId();
 	}
@@ -136,5 +148,18 @@ public class UserController {
 		final User user = resultUser.get();
 		user.setRoles(userRole.getRoles());
 		userRepository.save(user);
+	}
+	
+	
+	@PostMapping("/login")
+	public Long login(@RequestBody User user) {
+		final String login = user.getLogin();
+		if(login == null || login.trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
+			throw new IllegalArgumentException("login or password invalid");
+		final Optional<User> result = userRepository.findByLogin(login);
+		if(!result.isPresent()) throw new IllegalArgumentException("login invalid");
+		final User resultUser = result.get();
+		if(!BCrypt.checkpw(user.getPassword(), resultUser.getPassword())) throw new IllegalArgumentException("password invalid");
+		return resultUser.getId();
 	}
 }
