@@ -1,11 +1,16 @@
 package com.hit.store.controllers.people;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +25,12 @@ import com.hit.store.models.people.People;
 import com.hit.store.models.people.User;
 import com.hit.store.repositories.people.PeopleRepository;
 import com.hit.store.repositories.people.UserRepository;
+//import com.hit.store.services.MyUserDetailsService;
+import com.hit.store.utils.Constants;
 import com.hit.store.utils.Validator;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 @RequestMapping("/user")
@@ -152,7 +162,7 @@ public class UserController {
 	
 	
 	@PostMapping("/login")
-	public Long login(@RequestBody User user) {
+	public String login(@RequestBody User user) {
 		final String login = user.getLogin();
 		if(login == null || login.trim().equals("") || !Validator.isPasswordValid(user.getPassword()))
 			throw new IllegalArgumentException("login or password invalid");
@@ -160,6 +170,19 @@ public class UserController {
 		if(!result.isPresent()) throw new IllegalArgumentException("login invalid");
 		final User resultUser = result.get();
 		if(!BCrypt.checkpw(user.getPassword(), resultUser.getPassword())) throw new IllegalArgumentException("password invalid");
-		return resultUser.getId();
+		return generateJWTToken(resultUser);
+	}
+	
+	
+	private String generateJWTToken(User user) {
+		long timestamp = System.currentTimeMillis();
+		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECRET_KEY)
+				.setIssuedAt(new Date(timestamp))
+				.setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
+				.claim("userId", user.getId())
+				.claim("login", user.getLogin())
+				.claim("name", user.getPeople().getName())
+				.compact();
+		return token;
 	}
 }
